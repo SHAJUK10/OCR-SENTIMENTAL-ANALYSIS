@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OCR & Sentiment Analysis</title>
+
+  <!-- Materialize CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Custom Styles -->
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f9f9f9;
+    }
+
+    nav {
+      background-color: #4a90e2;
+    }
+
+    .brand-logo {
+      font-weight: 700;
+    }
+
+    .btn-custom {
+      background-color: #4a90e2;
+    }
+
+    .btn-custom:hover {
+      background-color: #3d7bb8;
+    }
+
+    .card-panel {
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .sentiment-positive {
+      background-color: #e8f5e9;
+      /* Light Green */
+      color: #388e3c;
+      /* Green */
+      font-weight: bold;
+    }
+
+    .sentiment-negative {
+      background-color: #ffebee;
+      /* Light Red */
+      color: #d32f2f;
+      /* Red */
+      font-weight: bold;
+    }
+
+    .sentiment-neutral {
+      background-color: #e3f2fd;
+      /* Light Blue */
+      color: #1976d2;
+      /* Blue */
+      font-weight: bold;
+    }
+
+    .text-output {
+      background-color: #ffffff;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      font-family: "Courier New", monospace;
+      /* Monospace font for alignment */
+      font-size: 20px;
+      color: #333;
+      /* Dark text color */
+      overflow-x: auto;
+      /* Add horizontal scroll for long text lines */
+      white-space: pre-wrap;
+      /* Preserve text wrapping and formatting */
+      line-height: 0.2;
+      white-space: pre-wrap;  /* Maintains formatting and line breaks */
+            word-wrap: break-word;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #333;
+    }
+
+    footer {
+      background-color: #4a90e2;
+      color: white;
+      padding: 15px 0;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-wrapper container">
+      <a href="#" class="brand-logo center">OCR & Sentiment Analysis</a>
+    </div>
+  </nav>
+
+  <!-- Content Section -->
+  <div class="container" style="margin-top: 50px;">
+    <div class="row">
+      <form action="/" method="post" enctype="multipart/form-data" class="col s12">
+        <div class="card-panel">
+          <div class="row">
+            <!-- File Upload -->
+            <div class="input-field col s12 m6">
+              <h5>Upload Image</h5>
+              <div class="file-field input-field">
+                <div class="btn btn-custom">
+                  <span>Choose File</span>
+                  <input type="file" name="image_upload" id="image_upload" />
+                </div>
+                <div class="file-path-wrapper">
+                  <input class="file-path validate" type="text" placeholder="Upload your image" name="image_name"
+                    id="image_name" />
+                </div>
+              </div>
+              <button id="submit" type="submit" class="btn btn-large btn-custom">Extract</button>
+            </div>
+
+            <!-- Uploaded Image Preview -->
+            <div class="col s12 m6">
+              <h5>Uploaded Image</h5>
+              {% if full_filename %}
+              <img src="{{ url_for('static', filename=full_filename) }}" class="responsive-img" alt="Uploaded Image">
+              {% else %}
+              <p>No image uploaded yet.</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Extracted Text -->
+          {% if text %}
+          <div class="row">
+            <div class="col s12">
+              <h5>Extracted Text</h5>
+              <div class="text-output">
+                {% for i in text %}
+                <p>{{ i }}</p>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Sentiment Analysis -->
+          {% if sentiment %}
+          <div class="row">
+            <div class="col s12">
+              <h5>Sentiment Analysis</h5>
+              <div
+                class="card-panel {% if sentiment == 'Positive' %}sentiment-positive{% elif sentiment == 'Negative' %}sentiment-negative{% else %}sentiment-neutral{% endif %}">
+                <p><strong>Sentiment:</strong> {{ sentiment }}</p>
+                <p><strong>Score:</strong> {{ score }}</p>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 OCR & Sentiment Analysis  SHAJU K</p>
+  </footer>
+
+  <!-- Materialize JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+  <!-- Script to handle file upload -->
+  <script>
+    document.getElementById('image_upload').onchange = function () {
+      document.getElementById('image_name').value = this.value.split('\\').pop();
+    };
+  </script>
+</body>
+
+</html>
